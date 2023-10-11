@@ -1,0 +1,23 @@
+{
+  "production": {
+    "username": "root",
+    "password": "",
+    "database": "rapidcricketline",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "rapidcricketline",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "",
+    "database": "rapidcricketline",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
