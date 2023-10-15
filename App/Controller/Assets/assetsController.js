@@ -20,7 +20,7 @@ exports.getHomeBanner = async (req, res) => {
       'id',
       'DESC'
     );
-
+    console.log(results.length);
     return res.status(200).send(successCode(true, 'success', results, null));
   } catch (error) {
     console.log(error);

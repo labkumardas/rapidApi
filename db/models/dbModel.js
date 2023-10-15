@@ -2,6 +2,8 @@ var connection = require('../../config/db.config');
 
 exports.findAll = async (table, attributes, orderByColumn, orderDirection) => {
   let columnsString;
+  console.log(attributes);
+
   if (attributes) {
     columnsString = attributes.join(', ');
   } else {
@@ -26,6 +28,7 @@ exports.findAll = async (table, attributes, orderByColumn, orderDirection) => {
 };
 
 exports.findAndCount = async (
+  req,
   table,
   attributes,
   orderByColumn,
@@ -37,15 +40,31 @@ exports.findAndCount = async (
 
   const columnsString = attributes.join(', ');
   let jsonObj;
+  let type;
+  let format;
+
+  console.log(req.body.type, req.body.format);
+  if (req.body.type !== undefined && req.body.type !== null) {
+    type = req.body.type;
+  }
+  if (req.body.format !== undefined && req.body.format !== null) {
+    format = req.body.format;
+  }
 
   return new Promise((resolve, reject) => {
-    // Query to get the paginated results with total count
+    let whereClause = {};
+    if (type !== undefined) {
+      whereClause.match_format = type;
+    }
+    if (format !== undefined) {
+      whereClause.status_str = format;
+    }
     const selectQuery = `SELECT ${columnsString}, COUNT(*) OVER() as totalItems 
   FROM ${table} 
+  ${buildWhereClause(whereClause)} 
   ORDER BY ${orderByColumn} ${orderDirection} 
   LIMIT ${limit} OFFSET ${offset}`;
 
-    // Execute the select query
     connection.query(selectQuery, (selectErr, selectResults) => {
       if (selectErr) {
         console.error('Error executing select query:', selectErr);
@@ -68,6 +87,55 @@ exports.findAndCount = async (
   });
 };
 
+//
+
+exports.findByMatchID = async (table, attributes, id, matchType) => {
+  let columnsString;
+
+  if (attributes) {
+    columnsString = attributes.join(', ');
+  } else {
+    columnsString = '*';
+  }
+
+  return new Promise((resolve, reject) => {
+    let whereClause = {};
+
+    if (id !== undefined) {
+      whereClause.id = id;
+    }
+    if (
+      matchType !== undefined ||
+      matchType !== 'undefined' ||
+      matchType !== null ||
+      matchType !== 'null'
+    ) {
+      whereClause.status_str = matchType;
+    }
+    if (matchType == 'undefined' || matchType == undefined) {
+      delete whereClause.status_str;
+    }
+
+    const query = `SELECT ${columnsString} FROM ${table} ${buildWhereClause(
+      whereClause
+    )}`;
+    console.log('query', whereClause);
+
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        reject(err); // Reject the promise with the error
+        return;
+      }
+
+      // Resolve the promise with the query results
+      resolve(results);
+    });
+  });
+};
+
+//
+
 exports.closeConnection = () => {
   connection.end((err) => {
     if (err) {
@@ -76,4 +144,14 @@ exports.closeConnection = () => {
     }
     console.log('Connection closed');
   });
+};
+
+const buildWhereClause = (conditions) => {
+  const conditionsArray = Object.entries(conditions).map(
+    ([key, value]) => `${key} = "${value}"`
+  );
+  if (conditionsArray.length > 0) {
+    return `WHERE ${conditionsArray.join(' AND ')}`;
+  }
+  return '';
 };
