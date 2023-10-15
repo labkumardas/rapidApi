@@ -145,3 +145,35 @@ exports.getMatchCommentary = async (req, res) => {
     return res.status(500).send(errorCode(true, 'error', error));
   }
 };
+
+///
+exports.getMatchScoreCard = async (req, res) => {
+  let responseData = {};
+
+  const id = req.body.id;
+  if (!id) {
+    return res.status(403).send(errorCode(true, 'error', 'id is required!'));
+  }
+  const attributesList = [
+    'match_id ',
+    'live',
+    'commentary',
+    'wagon',
+    'scorecard',
+    'live_odds',
+    'session_odds',
+  ];
+  const status_str = 'all';
+  try {
+    const results = await Model.findMatchIDFromChieldTable(
+      'rcl_api_matches_stats',
+      (attributes = attributesList),
+      id
+    );
+
+    return res.status(200).send(successCode(true, 'success', results, null));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(errorCode(true, 'error', error));
+  }
+};

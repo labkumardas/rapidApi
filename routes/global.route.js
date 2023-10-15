@@ -8,4 +8,5 @@ module.exports = function (app) {
   app.post(`${prefix}/getMatchInfo`, matchController.getMatchInfo);
   app.post(`${prefix}/getMatchLive`, matchController.getMatchLive);
   app.post(`${prefix}/getMatchCommentary`, matchController.getMatchCommentary);
+  app.post(`${prefix}/getMatchScoreCard`, matchController.getMatchScoreCard);
 };

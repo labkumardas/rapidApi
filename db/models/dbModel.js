@@ -136,6 +136,41 @@ exports.findByMatchID = async (table, attributes, id, matchType) => {
 
 //
 
+exports.findMatchIDFromChieldTable = async (table, attributes, id) => {
+  let columnsString;
+
+  if (attributes) {
+    columnsString = attributes.join(', ');
+  } else {
+    columnsString = '*';
+  }
+
+  return new Promise((resolve, reject) => {
+    let whereClause = {};
+
+    if (id !== undefined) {
+      whereClause.match_id = id;
+    }
+
+    const query = `SELECT ${columnsString} FROM ${table} ${buildWhereClause(
+      whereClause
+    )}`;
+    console.log('query', whereClause);
+
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        reject(err); // Reject the promise with the error
+        return;
+      }
+
+      // Resolve the promise with the query results
+      resolve(results);
+    });
+  });
+};
+//
+
 exports.closeConnection = () => {
   connection.end((err) => {
     if (err) {
