@@ -113,38 +113,7 @@ exports.getMatchLive = async (req, res) => {
   }
 };
 
-exports.getMatchCommentary = async (req, res) => {
-  let responseData = {};
-
-  const id = req.body.id;
-  if (!id) {
-    return res.status(403).send(errorCode(true, 'error', 'id is required!'));
-  }
-  const attributesList = [
-    'api_id',
-    'id',
-    'status_str',
-    'title',
-    'short_title',
-    'date_start',
-    'status',
-    'team_a',
-    'team_b',
-  ];
-  const status_str = 'all';
-  try {
-    const results = await Model.findByMatchID(
-      'rcl_api_matches',
-      (attributes = attributesList),
-      id
-    );
-
-    return res.status(200).send(successCode(true, 'success', results, null));
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorCode(true, 'error', error));
-  }
-};
+exports.getMatchCommentary = async (req, res) => {};
 
 ///
 exports.getMatchScoreCard = async (req, res) => {
