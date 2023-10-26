@@ -7,19 +7,19 @@ const server = http.createServer(app);
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-const port = 8088;
+const port = 8081;
 const helmet = require('helmet');
 app.use(bodyParser.json());
 
-const corsOptions = {
-  origin: ['http://localhost:3000', 'http://example2.com'],
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: ['http://localhost:3000', 'http://example2.com'],
+//   credentials: true, //access-control-allow-credentials:true
+//   optionSuccessStatus: 200,
+// };
 
 app.use(helmet());
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 

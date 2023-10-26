@@ -3,6 +3,14 @@ const { successCode, errorCode } = require('../../const/statusCode');
 const { getPagingData, getPagination } = require('../../Helper/GlobalHelper');
 const Model = require('../../../db/models/dbModel');
 
+exports.test = async (req, res) => {
+  try {
+    return res.status(200).send({ response: 'welcome to rapidcricketAPI' });
+  } catch (error) {
+    return res.status(500).send({ response: error });
+  }
+};
+//
 exports.getMatches = async (req, res) => {
   let responseData = {};
   const { page, size } = req.body;
