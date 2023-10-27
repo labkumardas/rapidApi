@@ -6,7 +6,7 @@ const Model = require('../../../db/models/dbModel');
 exports.getHomeBanner = async (req, res) => {
   const attributesList = [
     'title',
-    'image',
+    'images',
     'banner_type',
     'external_url',
     'show_pages',
