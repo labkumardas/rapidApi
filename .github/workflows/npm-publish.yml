@@ -9,15 +9,32 @@ jobs:
     name: run pull
     runs-on: ubuntu-latest
     
+    # steps:
+    # - name: install ssh keys
+    #   # check this thread to understand why its needed:
+    #   # https://stackoverflow.com/a/70447517
+    #   run: |
+    #     install -m 600 -D /dev/null ~/.ssh/id_rsa
+    #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+    #     ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+    # - name: connect and pull
+    #   run: ssh ubuntu@52.66.138.40 "cd /home/ubuntu && sh script.sh && exit"
+    # - name: cleanup
+    #   run: rm -rf ~/.ssh
+
     steps:
-    - name: install ssh keys
-      # check this thread to understand why its needed:
-      # https://stackoverflow.com/a/70447517
-      run: |
-        install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-    - name: connect and pull
-      run: ssh ubuntu@52.66.138.40 "cd /home/ubuntu && sh script.sh && exit"
-    - name: cleanup
-      run: rm -rf ~/.ssh
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+            HOSTNAME: ${{secrets.SSH_HOST}}
+            USER_NAME: ${{secrets.SSH_USER}}
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd /home/ubuntu &&
+              sh script.sh && 
+              exit    
