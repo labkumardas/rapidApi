@@ -2,9 +2,9 @@
 const mysql = require('mysql');
 //local mysql db connection
 const dbConn = mysql.createConnection({
-  host: '52.66.138.40',
+  host: 'localhost',
   user: 'bpivd',
-  password: 'cG8IgdDI27dEQnX7beLph5x4a9C03VC5',
+  password: 'cG8IgdD_1I27dEQnX7beLph5x4a9C03VC5',
   database: 'rapidcricketline',
 });
 dbConn.connect(function (err) {

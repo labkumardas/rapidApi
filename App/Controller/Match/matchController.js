@@ -47,7 +47,7 @@ exports.getMatches = async (req, res) => {
       .send(successCode(true, 'success', results, responseData));
   } catch (error) {
     console.log(error);
-    return res.status(500).send(errorCode(true, 'error', error));
+    return res.status(500).send(errorCode(true, 'error', error.message));
   }
 };
 
