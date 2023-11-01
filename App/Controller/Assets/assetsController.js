@@ -16,7 +16,7 @@ exports.getHomeBanner = async (req, res) => {
   try {
     const results = await Model.findAll(
       'rcl_app_banners',
-      (attributes = attributesList),
+      (attributes = null),
       'id',
       'DESC'
     );
