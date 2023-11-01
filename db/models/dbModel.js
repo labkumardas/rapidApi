@@ -4,7 +4,7 @@ exports.findAll = async (table, attributes, orderByColumn, orderDirection) => {
   let columnsString;
   console.log(attributes);
 
-  if (attributes) {
+  if (attributes && attributes != null) {
     columnsString = attributes.join(', ');
   } else {
     columnsString = '*';
