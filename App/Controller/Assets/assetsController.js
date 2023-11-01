@@ -13,6 +13,9 @@ exports.getHomeBanner = async (req, res) => {
     'position',
     'is_active ',
   ];
+  return res
+    .status(200)
+    .send(successCode(true, 'success', attributesList, null));
   try {
     const results = await Model.findAll(
       'rcl_app_banners',
