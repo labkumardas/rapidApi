@@ -1,3 +1,4 @@
+const { LONG } = require('mysql/lib/protocol/constants/types');
 var connection = require('../../config/db.config');
 
 exports.findAll = async (table, attributes, orderByColumn, orderDirection) => {
@@ -37,8 +38,13 @@ exports.findAndCount = async (
 ) => {
   // Pagination parameters
   const limit = 10;
+  let columnsString;
 
-  const columnsString = attributes.join(', ');
+  if (attributes && attributes != null) {
+    columnsString = attributes.join(', ');
+  } else {
+    columnsString = '*';
+  }
   let jsonObj;
   let type;
   let format;
@@ -92,7 +98,7 @@ exports.findAndCount = async (
 exports.findByMatchID = async (table, attributes, id, matchType) => {
   let columnsString;
 
-  if (attributes) {
+  if (attributes && attributes != null) {
     columnsString = attributes.join(', ');
   } else {
     columnsString = '*';
@@ -138,8 +144,7 @@ exports.findByMatchID = async (table, attributes, id, matchType) => {
 
 exports.findMatchIDFromChieldTable = async (table, attributes, id) => {
   let columnsString;
-
-  if (attributes) {
+  if (attributes && attributes != null) {
     columnsString = attributes.join(', ');
   } else {
     columnsString = '*';
@@ -169,7 +174,39 @@ exports.findMatchIDFromChieldTable = async (table, attributes, id) => {
     });
   });
 };
-//
+
+exports.findMatchBySeries = async (table, attributes, id) => {
+  let columnsString;
+  if (attributes && attributes != null) {
+    columnsString = attributes.join(', ');
+  } else {
+    columnsString = '*';
+  }
+
+  return new Promise((resolve, reject) => {
+    let whereClause = {};
+
+    if (id !== undefined) {
+      whereClause.competition_id = id;
+    }
+    console.log(whereClause);
+    const query = `SELECT ${columnsString} FROM ${table} ${buildWhereClause(
+      whereClause
+    )}`;
+    console.log('query', query, id);
+
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        reject(err); // Reject the promise with the error
+        return;
+      }
+
+      // Resolve the promise with the query results
+      resolve(results);
+    });
+  });
+};
 
 exports.closeConnection = () => {
   connection.end((err) => {

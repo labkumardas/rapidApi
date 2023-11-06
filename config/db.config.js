@@ -12,3 +12,15 @@ dbConn.connect(function (err) {
   console.log('Database Connected!');
 });
 module.exports = dbConn;
+
+// const dbConn = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: null,
+//   database: 'rapidcricketline',
+// });
+// dbConn.connect(function (err) {
+//   if (err) throw err;
+//   console.log('Database Connected!');
+// });
+// module.exports = dbConn;

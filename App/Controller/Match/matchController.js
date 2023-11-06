@@ -31,7 +31,7 @@ exports.getMatches = async (req, res) => {
     const results = await Model.findAndCount(
       req,
       'rcl_api_matches',
-      (attributes = attributesList),
+      (attributes = null),
       'id',
       'DESC',
       offset
@@ -73,7 +73,7 @@ exports.getMatchInfo = async (req, res) => {
   try {
     const results = await Model.findByMatchID(
       'rcl_api_matches',
-      (attributes = attributesList),
+      (attributes = null),
       id
     );
 
@@ -143,7 +143,52 @@ exports.getMatchScoreCard = async (req, res) => {
   try {
     const results = await Model.findMatchIDFromChieldTable(
       'rcl_api_matches_stats',
-      (attributes = attributesList),
+      (attributes = null),
+      id
+    );
+
+    return res.status(200).send(successCode(true, 'success', results, null));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(errorCode(true, 'error', error));
+  }
+};
+
+exports.getSeriesList = async (req, res) => {
+  let responseData = {};
+
+  const id = req.body.id;
+  if (!id) {
+    return res.status(403).send(errorCode(true, 'error', 'id is required!'));
+  }
+
+  try {
+    const results = await Model.findAll(
+      'rcl_api_competitions',
+      (attributes = null),
+      'id',
+      'DESC'
+    );
+
+    return res.status(200).send(successCode(true, 'success', results, null));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(errorCode(true, 'error', error));
+  }
+};
+
+exports.getMatchesBySeries = async (req, res) => {
+  let responseData = {};
+
+  const id = req.body.id;
+  if (!id) {
+    return res.status(403).send(errorCode(true, 'error', 'id is required!'));
+  }
+
+  try {
+    const results = await Model.findMatchBySeries(
+      'rcl_api_matches',
+      (attributes = null),
       id
     );
 
